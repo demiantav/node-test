@@ -1,5 +1,11 @@
+
 import express from "express"
+import mongoose from "mongoose"
 import cors from "cors"
+import Note from "./models/note.js"
+
+
+
 
 const app = express()
 
@@ -53,9 +59,12 @@ let notes = [
   })
   
   app.get('/api/notes', (request, response) => {
-    console.log(request)
-    console.log(response)
-    response.json(notes)
+    Note.find({}).then(notes => {
+      response.json(notes)
+    }).catch(error =>{
+
+      console.log(error)
+    })
   })
 
   app.get('/api/notes/:id', (request, response) => {
@@ -81,9 +90,6 @@ let notes = [
 
     const id = Number(request.params.id);
 
-
-
-
   })
 
   app.post('/api/notes', (request, response) => {
@@ -100,17 +106,20 @@ let notes = [
     
     } else {
 
-      const note = {
-
+      const note = new Note({
         content: body.content,
         important: body.important || false,
-        id: generateID()
-      }
+      })
 
-      notes = notes.concat(note)
+      // notes = notes.concat(note)
   
-      response.json(note)
-      console.log(note)
+      // response.json(note)
+      // console.log(note)
+
+      note.save().then(savedNote => {
+        response.json(savedNote);
+        
+      })
     }
   
     
@@ -129,7 +138,7 @@ let notes = [
 
   }
 
-  const PORT = process.env.PORT || 3001
+  const PORT = process.env.PORT
 
   
   app.listen(PORT, () => {
