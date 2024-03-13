@@ -4,68 +4,60 @@ import loggers from '../utils/loggers.js';
 
 const noteRouter = Router();
 
-noteRouter.get('/', (request, response) => {
-  Note.find({})
-    .then((notes) => {
-      response.json(notes);
-    })
-    .catch((error) => {
-      loggers.error(error);
-    });
+noteRouter.get('/', async (request, response) => {
+	const notes = await Note.find({});
+	response.json(notes);
 });
 
-noteRouter.get('/:id', (request, response, next) => {
-  const { id } = request.params;
+noteRouter.get('/:id', async (request, response, next) => {
+	const { id } = request.params;
 
-  Note.findById(id)
-    .then((note) => {
-      if (note) {
-        response.json(note);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+	try {
+		const note = await Note.findById(id);
+
+		// eslint-disable-next-line no-unused-expressions
+		note ? response.json(note) : response.status(404).end();
+	} catch (error) {
+		next(error);
+	}
 });
 
-noteRouter.delete('/:id', (request, response, next) => {
-  const { id } = request.params;
+noteRouter.delete('/:id', async (request, response, next) => {
+	const { id } = request.params;
 
-  Note.findByIdAndDelete(id)
-    .then((note) => {
-      response.send(note).status(204).end();
-    })
-    .catch((error) => next(error));
+	try {
+		await Note.findByIdAndDelete(id);
+
+		response.status(204).end();
+	} catch (error) {
+		next(error);
+	}
 });
 
 noteRouter.put('/:id', (request, response, next) => {
-  const { content, important } = request.body;
+	const { content, important } = request.body;
 
-  Note.findByIdAndUpdate(
-    request.params.id,
-    { content, important },
-    { new: true, runValidators: true, context: 'query' }
-  )
-    .then((updatedNote) => {
-      response.json(updatedNote);
-    })
-    .catch((error) => next(error));
+	Note.findByIdAndUpdate(request.params.id, { content, important }, { new: true, runValidators: true, context: 'query' })
+		.then((updatedNote) => {
+			response.json(updatedNote);
+		})
+		.catch((error) => next(error));
 });
 
-noteRouter.post('/', (request, response, next) => {
-  const { body } = request;
+noteRouter.post('/', async (request, response, next) => {
+	const { body } = request;
 
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-  });
+	const note = new Note({
+		content: body.content,
+		important: body.important || false,
+	});
 
-  note
-    .save()
-    .then((savedNote) => {
-      response.json(savedNote);
-    })
-    .catch((error) => next(error));
+	try {
+		const savedNote = await note.save();
+		response.status(201).json(savedNote);
+	} catch (exception) {
+		next(exception);
+	}
 });
 
 export default noteRouter;
