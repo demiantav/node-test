@@ -13,14 +13,14 @@ mongoose.set('strictQuery', false);
 console.log('connecting to', config.MONGODB_URI);
 
 mongoose
-  .connect(config.MONGODB_URI)
+	.connect(config.MONGODB_URI)
 
-  .then((result) => {
-    loggers.info('connected to MongoDB');
-  })
-  .catch((error) => {
-    loggers.error('error connecting to MongoDB:', error.message);
-  });
+	.then((result) => {
+		loggers.info('connected to MongoDB');
+	})
+	.catch((error) => {
+		loggers.error('error connecting to MongoDB:', error.message);
+	});
 
 // Middlewares
 
