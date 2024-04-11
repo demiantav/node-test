@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Note from '../models/note.js';
+import User from '../models/user.js';
 import loggers from '../utils/loggers.js';
 
 const noteRouter = Router();
@@ -47,13 +48,18 @@ noteRouter.put('/:id', (request, response, next) => {
 noteRouter.post('/', async (request, response, next) => {
 	const { body } = request;
 
+	const user = await User.findById(body.userId);
+
 	const note = new Note({
 		content: body.content,
 		important: body.important || false,
+		user: user._id,
 	});
 
 	try {
 		const savedNote = await note.save();
+		user.notes = user.notes.concat(savedNote._id);
+		await user.save();
 		response.status(201).json(savedNote);
 	} catch (exception) {
 		next(exception);

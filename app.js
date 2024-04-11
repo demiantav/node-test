@@ -5,6 +5,7 @@ import loggers from './utils/loggers.js';
 import noteRouter from './controllers/notes.js';
 import config from './utils/config.js';
 import middleware from './utils/middleware.js';
+import usersRouter from './controllers/users.js';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(express.static('dist'));
 
 app.use('/api/notes', noteRouter);
+app.use('/api/users', usersRouter);
 
 app.use(middleware.requestLogger);
 

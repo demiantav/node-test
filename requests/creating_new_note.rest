@@ -2,6 +2,7 @@ POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
-    
-    "important":false
+    "content": "Lulu tuvo prueba de matematica",
+    "important":true,
+    "userId": "66184e67206164a7a4632bc2"
 }
