@@ -1,8 +1,8 @@
 POST http://localhost:3001/api/notes/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NjFmZTE3YzkyYmExNjU5YzIzMDMxZWMiLCJpYXQiOjE3MTMzODY0MjJ9.Obl5-PCEoU4mFP4kXrAoMr0EdYDUjo30Mb-uIq89-sY
 
 {
-    "content": "Lulu tuvo prueba de matematica",
-    "important":true,
-    "userId": "66184e67206164a7a4632bc2"
+    "content": "Test post note checking Token 2",
+    "important":false
 }
